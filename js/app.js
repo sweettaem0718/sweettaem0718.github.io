@@ -11,6 +11,9 @@
             "consent.title": "서비스 이용 동의",
             "consent.body": "본 서비스는 촬영된 사진을 서버에 저장하지 않으며, 사용자의 정보를 수집하지 않습니다.",
             "consent.agree": "동의하고 시작하기",
+            "camera.notice.title": "카메라 권한 안내",
+            "camera.notice.body": "원활한 사용을 위해 카메라 권한이 필요합니다. 촬영한 사진은 서버에 저장되지 않으니 안심하고 이용해 주세요.",
+            "camera.notice.confirm": "확인",
             "desktop.notice.title": "모바일 최적화 안내",
             "desktop.notice.body": "이 사이트는 모바일 환경에 최적화되어 있습니다. 컴퓨터에서도 이용은 가능하지만, 모바일에서 더 좋은 사용 경험을 제공합니다.",
             "desktop.notice.confirm": "확인",
@@ -52,6 +55,9 @@
             "consent.title": "Consent to Use",
             "consent.body": "This service does not store your photos on the server and does not collect personal information.",
             "consent.agree": "Agree and Start",
+            "camera.notice.title": "Camera Permission Notice",
+            "camera.notice.body": "Camera access is required for smooth use. Your photos are not stored on the server.",
+            "camera.notice.confirm": "OK",
             "desktop.notice.title": "Mobile Optimization Notice",
             "desktop.notice.body": "This site is optimized for mobile devices.",
             "desktop.notice.confirm": "OK",
@@ -93,6 +99,9 @@
             "consent.title": "サービス利用同意",
             "consent.body": "本サービスは撮影写真をサーバーに保存せず、個人情報を収集しません。",
             "consent.agree": "同意して開始",
+            "camera.notice.title": "カメラ権限の案内",
+            "camera.notice.body": "快適に利用するためカメラ権限が必要です。撮影した写真はサーバーに保存されません。",
+            "camera.notice.confirm": "確認",
             "desktop.notice.title": "モバイル最適化のお知らせ",
             "desktop.notice.body": "このサイトはモバイル環境向けに最適化されています。",
             "desktop.notice.confirm": "確認",
@@ -134,6 +143,9 @@
             "consent.title": "服务使用同意",
             "consent.body": "本服务不会在服务器保存照片，也不会收集个人信息。",
             "consent.agree": "同意并开始",
+            "camera.notice.title": "相机权限提示",
+            "camera.notice.body": "为保证顺畅使用，需要相机权限。拍摄的照片不会保存在服务器上，请放心使用。",
+            "camera.notice.confirm": "确认",
             "desktop.notice.title": "移动端优化提示",
             "desktop.notice.body": "本网站针对移动端进行了优化。",
             "desktop.notice.confirm": "确认",
@@ -181,6 +193,7 @@
         cameraInitRequested: false,
         hasConsent: false,
         desktopNoticeConfirmed: false,
+        cameraNoticeConfirmed: false,
         language: "ko",
     };
 
@@ -203,6 +216,10 @@
         consentAgreeBtn: document.getElementById("consentAgreeBtn"),
         consentTitle: document.getElementById("consentTitle"),
         consentBody: document.getElementById("consentBody"),
+        cameraNoticeModal: document.getElementById("cameraNoticeModal"),
+        cameraNoticeTitle: document.getElementById("cameraNoticeTitle"),
+        cameraNoticeBody: document.getElementById("cameraNoticeBody"),
+        cameraNoticeConfirmBtn: document.getElementById("cameraNoticeConfirmBtn"),
         desktopNoticeModal: document.getElementById("desktopNoticeModal"),
         desktopNoticeTitle: document.getElementById("desktopNoticeTitle"),
         desktopNoticeBody: document.getElementById("desktopNoticeBody"),
@@ -239,10 +256,11 @@
         bindSave();
         bindRetry();
         bindFlowControls();
+        bindCameraNotice();
         selectDefaultFrame();
         updateUI();
         if (state.hasConsent && state.desktopNoticeConfirmed) {
-            requestCameraPermissionOnLoad();
+            requestCameraPermissionWithNotice();
         }
     }
 
@@ -340,6 +358,9 @@
         if (elements.consentTitle) elements.consentTitle.textContent = t("consent.title");
         if (elements.consentBody) elements.consentBody.textContent = t("consent.body");
         if (elements.consentAgreeBtn) elements.consentAgreeBtn.textContent = t("consent.agree");
+        if (elements.cameraNoticeTitle) elements.cameraNoticeTitle.textContent = t("camera.notice.title");
+        if (elements.cameraNoticeBody) elements.cameraNoticeBody.textContent = t("camera.notice.body");
+        if (elements.cameraNoticeConfirmBtn) elements.cameraNoticeConfirmBtn.textContent = t("camera.notice.confirm");
         if (elements.desktopNoticeTitle) elements.desktopNoticeTitle.textContent = t("desktop.notice.title");
         if (elements.desktopNoticeBody) elements.desktopNoticeBody.textContent = t("desktop.notice.body");
         if (elements.desktopNoticeConfirmBtn) elements.desktopNoticeConfirmBtn.textContent = t("desktop.notice.confirm");
@@ -378,7 +399,7 @@
         setConsentModalVisible(false);
         updateStartCaptureAvailability();
         if (state.desktopNoticeConfirmed) {
-            requestCameraPermissionOnLoad();
+            requestCameraPermissionWithNotice();
         }
         showToast(t("toast.consentDone"));
     }
@@ -405,7 +426,7 @@
             setConsentModalVisible(true);
             return;
         }
-        requestCameraPermissionOnLoad();
+        requestCameraPermissionWithNotice();
     }
 
     function setDesktopNoticeModalVisible(visible) {
@@ -416,8 +437,9 @@
 
     function updateModalOpenState() {
         const isConsentVisible = elements.consentModal && !elements.consentModal.classList.contains("hidden");
+        const isCameraNoticeVisible = elements.cameraNoticeModal && !elements.cameraNoticeModal.classList.contains("hidden");
         const isDesktopNoticeVisible = elements.desktopNoticeModal && !elements.desktopNoticeModal.classList.contains("hidden");
-        document.body.classList.toggle("modal-open", Boolean(isConsentVisible || isDesktopNoticeVisible));
+        document.body.classList.toggle("modal-open", Boolean(isConsentVisible || isCameraNoticeVisible || isDesktopNoticeVisible));
     }
 
     function isDesktopEnvironment() {
@@ -425,6 +447,33 @@
         const isMobileUa = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua);
         const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
         return !isMobileUa && !hasCoarsePointer;
+    }
+
+    function bindCameraNotice() {
+        if (!elements.cameraNoticeConfirmBtn) return;
+        elements.cameraNoticeConfirmBtn.addEventListener("click", confirmCameraNotice);
+    }
+
+    function confirmCameraNotice() {
+        state.cameraNoticeConfirmed = true;
+        setCameraNoticeModalVisible(false);
+        requestCameraPermissionOnLoad();
+    }
+
+    function setCameraNoticeModalVisible(visible) {
+        if (!elements.cameraNoticeModal) return;
+        elements.cameraNoticeModal.classList.toggle("hidden", !visible);
+        updateModalOpenState();
+    }
+
+    function requestCameraPermissionWithNotice() {
+        if (state.cameraInitRequested) return;
+        if (!state.hasConsent || !state.desktopNoticeConfirmed) return;
+        if (!state.cameraNoticeConfirmed) {
+            setCameraNoticeModalVisible(true);
+            return;
+        }
+        requestCameraPermissionOnLoad();
     }
 
     function requestCameraPermissionOnLoad() {
