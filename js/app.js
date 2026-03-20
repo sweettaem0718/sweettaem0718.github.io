@@ -485,8 +485,26 @@
     function bindRetry() {
         if (!elements.retryBtn) return;
         elements.retryBtn.addEventListener("click", () => {
-            window.location.reload();
+            resetCaptureFlow();
         });
+    }
+
+    function resetCaptureFlow() {
+        state.currentCutIndex = 0;
+        state.isCameraMirrored = true;
+        initCuts();
+
+        if (elements.framePanel) elements.framePanel.classList.remove("hidden");
+        if (elements.capturePanel) elements.capturePanel.classList.add("hidden");
+        if (elements.statusMessage) elements.statusMessage.textContent = "";
+        if (elements.toast) elements.toast.classList.remove("show");
+        if (elements.confettiLayer) elements.confettiLayer.innerHTML = "";
+
+        updateMirrorToggleButton();
+        updateUI();
+        renderFinalPreview();
+        renderLiveFrame();
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     }
 
     function bindFlowControls() {
