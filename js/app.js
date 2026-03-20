@@ -15,7 +15,7 @@
             "camera.notice.body": "원활한 사용을 위해 카메라 권한이 필요합니다. 촬영한 사진은 서버에 저장되지 않으니 안심하고 이용해 주세요.",
             "camera.notice.confirm": "확인",
             "desktop.notice.title": "모바일 최적화 안내",
-            "desktop.notice.body": "이 사이트는 모바일 환경에 최적화되어 있습니다. 컴퓨터에서도 이용은 가능하지만, 모바일에서 더 좋은 사용 경험을 제공합니다.",
+            "desktop.notice.body": "이 사이트는 모바일 환경에 최적화되어 있습니다.",
             "desktop.notice.confirm": "확인",
             "frame.title": "프레임 선택",
             "frame.hint": "원하는 프레임을 선택하면 촬영 화면으로 이동합니다.",
