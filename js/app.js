@@ -11,6 +11,9 @@
             "consent.title": "서비스 이용 동의",
             "consent.body": "본 서비스는 촬영된 사진을 서버에 저장하지 않으며, 사용자의 정보를 수집하지 않습니다.",
             "consent.agree": "동의하고 시작하기",
+            "desktop.notice.title": "모바일 최적화 안내",
+            "desktop.notice.body": "이 사이트는 모바일 환경에 최적화되어 있습니다. 컴퓨터에서도 이용은 가능하지만, 모바일에서 더 좋은 사용 경험을 제공합니다.",
+            "desktop.notice.confirm": "확인",
             "frame.title": "프레임 선택",
             "frame.hint": "원하는 프레임을 선택하면 촬영 화면으로 이동합니다.",
             "frame.fallback": "미리보기 없음",
@@ -49,6 +52,9 @@
             "consent.title": "Consent to Use",
             "consent.body": "This service does not store your photos on the server and does not collect personal information.",
             "consent.agree": "Agree and Start",
+            "desktop.notice.title": "Mobile Optimization Notice",
+            "desktop.notice.body": "This site is optimized for mobile devices.",
+            "desktop.notice.confirm": "OK",
             "frame.title": "Choose a Frame",
             "frame.hint": "Select a frame to move to the shooting screen.",
             "frame.fallback": "No preview",
@@ -87,6 +93,9 @@
             "consent.title": "サービス利用同意",
             "consent.body": "本サービスは撮影写真をサーバーに保存せず、個人情報を収集しません。",
             "consent.agree": "同意して開始",
+            "desktop.notice.title": "モバイル最適化のお知らせ",
+            "desktop.notice.body": "このサイトはモバイル環境向けに最適化されています。",
+            "desktop.notice.confirm": "確認",
             "frame.title": "フレーム選択",
             "frame.hint": "フレームを選択すると撮影画面に移動します。",
             "frame.fallback": "プレビューなし",
@@ -125,6 +134,9 @@
             "consent.title": "服务使用同意",
             "consent.body": "本服务不会在服务器保存照片，也不会收集个人信息。",
             "consent.agree": "同意并开始",
+            "desktop.notice.title": "移动端优化提示",
+            "desktop.notice.body": "本网站针对移动端进行了优化。",
+            "desktop.notice.confirm": "确认",
             "frame.title": "选择相框",
             "frame.hint": "选择相框后进入拍摄页面。",
             "frame.fallback": "无预览",
@@ -168,6 +180,7 @@
         imageCache: new Map(),
         cameraInitRequested: false,
         hasConsent: false,
+        desktopNoticeConfirmed: false,
         language: "ko",
     };
 
@@ -190,6 +203,10 @@
         consentAgreeBtn: document.getElementById("consentAgreeBtn"),
         consentTitle: document.getElementById("consentTitle"),
         consentBody: document.getElementById("consentBody"),
+        desktopNoticeModal: document.getElementById("desktopNoticeModal"),
+        desktopNoticeTitle: document.getElementById("desktopNoticeTitle"),
+        desktopNoticeBody: document.getElementById("desktopNoticeBody"),
+        desktopNoticeConfirmBtn: document.getElementById("desktopNoticeConfirmBtn"),
         framePanel: document.getElementById("framePanel"),
         framePanelTitle: document.getElementById("framePanelTitle"),
         framePanelHint: document.getElementById("framePanelHint"),
@@ -212,6 +229,7 @@
     async function init() {
         initLanguage();
         await ensureFramesLoaded();
+        initDesktopNoticeGate();
         initConsentGate();
         initCuts();
         renderFrameCards();
@@ -223,7 +241,7 @@
         bindFlowControls();
         selectDefaultFrame();
         updateUI();
-        if (state.hasConsent) {
+        if (state.hasConsent && state.desktopNoticeConfirmed) {
             requestCameraPermissionOnLoad();
         }
     }
@@ -322,6 +340,9 @@
         if (elements.consentTitle) elements.consentTitle.textContent = t("consent.title");
         if (elements.consentBody) elements.consentBody.textContent = t("consent.body");
         if (elements.consentAgreeBtn) elements.consentAgreeBtn.textContent = t("consent.agree");
+        if (elements.desktopNoticeTitle) elements.desktopNoticeTitle.textContent = t("desktop.notice.title");
+        if (elements.desktopNoticeBody) elements.desktopNoticeBody.textContent = t("desktop.notice.body");
+        if (elements.desktopNoticeConfirmBtn) elements.desktopNoticeConfirmBtn.textContent = t("desktop.notice.confirm");
         if (elements.framePanelTitle) elements.framePanelTitle.textContent = t("frame.title");
         if (elements.framePanelHint) elements.framePanelHint.textContent = t("frame.hint");
         if (elements.startCaptureBtn) elements.startCaptureBtn.textContent = t("capture.start");
@@ -348,7 +369,7 @@
         if (elements.consentAgreeBtn) {
             elements.consentAgreeBtn.addEventListener("click", acceptConsent);
         }
-        setConsentModalVisible(!state.hasConsent);
+        setConsentModalVisible(!state.hasConsent && state.desktopNoticeConfirmed);
     }
 
     function acceptConsent() {
@@ -356,14 +377,54 @@
         localStorage.setItem(CONSENT_STORAGE_KEY, "agreed");
         setConsentModalVisible(false);
         updateStartCaptureAvailability();
-        requestCameraPermissionOnLoad();
+        if (state.desktopNoticeConfirmed) {
+            requestCameraPermissionOnLoad();
+        }
         showToast(t("toast.consentDone"));
     }
 
     function setConsentModalVisible(visible) {
         if (!elements.consentModal) return;
         elements.consentModal.classList.toggle("hidden", !visible);
-        document.body.classList.toggle("modal-open", visible);
+        updateModalOpenState();
+    }
+
+    function initDesktopNoticeGate() {
+        const showDesktopNotice = isDesktopEnvironment();
+        state.desktopNoticeConfirmed = !showDesktopNotice;
+        if (elements.desktopNoticeConfirmBtn) {
+            elements.desktopNoticeConfirmBtn.addEventListener("click", confirmDesktopNotice);
+        }
+        setDesktopNoticeModalVisible(showDesktopNotice);
+    }
+
+    function confirmDesktopNotice() {
+        state.desktopNoticeConfirmed = true;
+        setDesktopNoticeModalVisible(false);
+        if (!state.hasConsent) {
+            setConsentModalVisible(true);
+            return;
+        }
+        requestCameraPermissionOnLoad();
+    }
+
+    function setDesktopNoticeModalVisible(visible) {
+        if (!elements.desktopNoticeModal) return;
+        elements.desktopNoticeModal.classList.toggle("hidden", !visible);
+        updateModalOpenState();
+    }
+
+    function updateModalOpenState() {
+        const isConsentVisible = elements.consentModal && !elements.consentModal.classList.contains("hidden");
+        const isDesktopNoticeVisible = elements.desktopNoticeModal && !elements.desktopNoticeModal.classList.contains("hidden");
+        document.body.classList.toggle("modal-open", Boolean(isConsentVisible || isDesktopNoticeVisible));
+    }
+
+    function isDesktopEnvironment() {
+        const ua = navigator.userAgent || "";
+        const isMobileUa = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua);
+        const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
+        return !isMobileUa && !hasCoarsePointer;
     }
 
     function requestCameraPermissionOnLoad() {
