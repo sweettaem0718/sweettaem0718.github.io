@@ -22,6 +22,7 @@
             "mirror.off": "카메라 반전 OFF",
             "camera.loading": "웹캠을 불러오는 중...",
             "save.button": "저장하기",
+            "retry.button": "다시하기",
             "noscript": "이 서비스는 JavaScript가 필요합니다.",
             "toast.title": "안내",
             "toast.default": "사진을 클릭 시 촬영됩니다.",
@@ -59,6 +60,7 @@
             "mirror.off": "Mirror OFF",
             "camera.loading": "Loading webcam...",
             "save.button": "Save",
+            "retry.button": "Try Again",
             "noscript": "This service requires JavaScript.",
             "toast.title": "Info",
             "toast.default": "Click the photo area to capture.",
@@ -96,6 +98,7 @@
             "mirror.off": "ミラー OFF",
             "camera.loading": "ウェブカメラを読み込み中...",
             "save.button": "保存",
+            "retry.button": "もう一度試す",
             "noscript": "このサービスにはJavaScriptが必要です。",
             "toast.title": "案内",
             "toast.default": "写真エリアをクリックすると撮影されます。",
@@ -133,6 +136,7 @@
             "mirror.off": "镜像 OFF",
             "camera.loading": "正在加载摄像头...",
             "save.button": "保存",
+            "retry.button": "重试",
             "noscript": "本服务需要启用 JavaScript。",
             "toast.title": "提示",
             "toast.default": "点击照片区域即可拍摄。",
@@ -180,6 +184,7 @@
         captureBtn: document.getElementById("captureBtn"),
         retakeBtn: document.getElementById("retakeBtn"),
         saveBtn: document.getElementById("saveBtn"),
+        retryBtn: document.getElementById("retryBtn"),
         startCaptureBtn: document.getElementById("startCaptureBtn"),
         consentModal: document.getElementById("consentModal"),
         consentAgreeBtn: document.getElementById("consentAgreeBtn"),
@@ -214,6 +219,7 @@
         bindCameraControls();
         bindMirrorToggle();
         bindSave();
+        bindRetry();
         bindFlowControls();
         selectDefaultFrame();
         updateUI();
@@ -323,6 +329,7 @@
         if (elements.layoutLabel) elements.layoutLabel.textContent = t("layout.label");
         if (elements.layoutVerticalPill) elements.layoutVerticalPill.textContent = t("layout.vertical");
         if (elements.saveBtn) elements.saveBtn.textContent = t("save.button");
+        if (elements.retryBtn) elements.retryBtn.textContent = t("retry.button");
         if (elements.noScriptMessage) elements.noScriptMessage.textContent = t("noscript");
         if (elements.toastTitle) elements.toastTitle.textContent = t("toast.title");
         if (elements.toastMessage) elements.toastMessage.textContent = t("toast.default");
@@ -472,6 +479,13 @@
             link.click();
             showToast(t("toast.saveDone"));
             launchConfettiBurst();
+        });
+    }
+
+    function bindRetry() {
+        if (!elements.retryBtn) return;
+        elements.retryBtn.addEventListener("click", () => {
+            window.location.reload();
         });
     }
 

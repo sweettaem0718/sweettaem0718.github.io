@@ -256,6 +256,12 @@ button.pill {
     margin-top: 10px;
 }
 
+.bottom-retry {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
 .toast {
     position: fixed;
     left: 50%;
@@ -377,6 +383,15 @@ button.pill {
     padding: 14px 18px;
     border-radius: 14px;
     font-size: 15px;
+    font-weight: 700;
+}
+
+.retry-button {
+    width: 100%;
+    max-width: 460px;
+    padding: 12px 18px;
+    border-radius: 14px;
+    font-size: 14px;
     font-weight: 700;
 }
 
@@ -541,5 +556,9 @@ button.pill {
     .bottom-save {
         position: static;
         margin-top: 8px;
+    }
+
+    .bottom-retry {
+        position: static;
     }
 }

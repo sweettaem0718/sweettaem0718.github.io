@@ -25,19 +25,18 @@
     ]
   },
   {
-    "id": "white-clean-vertical_1x4",
-    "name": "Clean White",
+    "id": "think-of-you-vertical_1x4",
+    "name": "Think Of You",
     "layoutType": "VERTICAL_1X4",
     "width": 1060,
     "height": 3187,
-    "previewImagePath": "images/frames/white-clean/preview.png",
-    "frameBaseImagePath": "images/frames/white-clean/base.png",
-    "overlayImagePath": "images/frames/white-clean/overlay.png",
+    "previewImagePath": "images/frames/think-of-you/preview.png",
+    "frameBaseImagePath": "images/frames/think-of-you/base.png",
     "perCutOverlayImagePaths": [
-      "images/frames/white-clean/cut-overlay-1.png",
-      "images/frames/white-clean/cut-overlay-2.png",
-      "images/frames/white-clean/cut-overlay-3.png",
-      "images/frames/white-clean/cut-overlay-4.png"
+      "images/frames/think-of-you/cut-overlay-1.png",
+      "images/frames/think-of-you/cut-overlay-2.png",
+      "images/frames/think-of-you/cut-overlay-3.png",
+      "images/frames/think-of-you/cut-overlay-4.png"
     ],
     "backgroundColor": "#ffffff",
     "borderColor": "#e5e7eb",
