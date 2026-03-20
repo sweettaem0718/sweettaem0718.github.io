@@ -12,7 +12,7 @@
             "consent.body": "본 서비스는 촬영된 사진을 서버에 저장하지 않으며, 사용자의 정보를 수집하지 않습니다.",
             "consent.agree": "동의하고 시작하기",
             "camera.notice.title": "카메라 권한 안내",
-            "camera.notice.body": "원활한 사용을 위해 카메라 권한이 필요합니다. 촬영한 사진은 서버에 저장되지 않으니 안심하고 이용해 주세요.",
+            "camera.notice.body": "원활한 사용을 위해 카메라 권한이 필요합니다.\n촬영한 사진은 서버에 저장되지 않으니 안심하고 이용해 주세요.",
             "camera.notice.confirm": "확인",
             "desktop.notice.title": "모바일 최적화 안내",
             "desktop.notice.body": "이 사이트는 모바일 환경에 최적화되어 있습니다.",
@@ -56,7 +56,7 @@
             "consent.body": "This service does not store your photos on the server and does not collect personal information.",
             "consent.agree": "Agree and Start",
             "camera.notice.title": "Camera Permission Notice",
-            "camera.notice.body": "Camera access is required for smooth use. Your photos are not stored on the server.",
+            "camera.notice.body": "Camera access is required for smooth use.\nYour photos are not stored on the server.",
             "camera.notice.confirm": "OK",
             "desktop.notice.title": "Mobile Optimization Notice",
             "desktop.notice.body": "This site is optimized for mobile devices.",
@@ -100,7 +100,7 @@
             "consent.body": "本サービスは撮影写真をサーバーに保存せず、個人情報を収集しません。",
             "consent.agree": "同意して開始",
             "camera.notice.title": "カメラ権限の案内",
-            "camera.notice.body": "快適に利用するためカメラ権限が必要です。撮影した写真はサーバーに保存されません。",
+            "camera.notice.body": "快適に利用するためカメラ権限が必要です。\n撮影した写真はサーバーに保存されません。",
             "camera.notice.confirm": "確認",
             "desktop.notice.title": "モバイル最適化のお知らせ",
             "desktop.notice.body": "このサイトはモバイル環境向けに最適化されています。",
@@ -144,7 +144,7 @@
             "consent.body": "本服务不会在服务器保存照片，也不会收集个人信息。",
             "consent.agree": "同意并开始",
             "camera.notice.title": "相机权限提示",
-            "camera.notice.body": "为保证顺畅使用，需要相机权限。拍摄的照片不会保存在服务器上，请放心使用。",
+            "camera.notice.body": "为保证顺畅使用，需要相机权限。\n拍摄的照片不会保存在服务器上，请放心使用。",
             "camera.notice.confirm": "确认",
             "desktop.notice.title": "移动端优化提示",
             "desktop.notice.body": "本网站针对移动端进行了优化。",
@@ -271,7 +271,7 @@
         }
 
         try {
-            const response = await fetch("frames.json", { cache: "no-store" });
+            const response = await fetch("frames.json", {cache: "no-store"});
             if (!response.ok) throw new Error(`frames.json ${response.status}`);
             const json = await response.json();
             frames = Array.isArray(json) ? json.map(normalizeFramePaths) : [];
@@ -486,7 +486,7 @@
     }
 
     function initCuts() {
-        state.cuts = Array.from({ length: 4 }).map(() => ({
+        state.cuts = Array.from({length: 4}).map(() => ({
             originalImageDataUrl: null,
             scale: 1,
             offsetX: 0,
@@ -614,7 +614,7 @@
         updateUI();
         renderFinalPreview();
         renderLiveFrame();
-        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        window.scrollTo({top: 0, left: 0, behavior: "smooth"});
     }
 
     function bindFlowControls() {
@@ -640,7 +640,7 @@
             return;
         }
 
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+        navigator.mediaDevices.getUserMedia({video: {facingMode: "user"}, audio: false})
             .then((stream) => {
                 state.stream = stream;
                 elements.video.srcObject = stream;
@@ -693,7 +693,7 @@
             showToast(t("toast.captureFinished"));
             return;
         }
-        showToast(t("toast.cutDone", { n: capturedCutNumber }));
+        showToast(t("toast.cutDone", {n: capturedCutNumber}));
     }
 
     function playNextCutSlide() {
@@ -735,7 +735,7 @@
         updateCameraBoxAspect();
         updateStartCaptureAvailability();
         if (elements.cutStatus) {
-            elements.cutStatus.textContent = t("cut.status", { index: state.currentCutIndex + 1 });
+            elements.cutStatus.textContent = t("cut.status", {index: state.currentCutIndex + 1});
         }
 
         if (cut.originalImageDataUrl) {
@@ -770,7 +770,7 @@
     function getStepText() {
         const confirmedCount = state.cuts.filter((c) => c.confirmed).length;
         if (confirmedCount < 4) {
-            return t("step.capture", { count: confirmedCount });
+            return t("step.capture", {count: confirmedCount});
         }
         return t("step.download");
     }
@@ -866,7 +866,11 @@
                 }
 
                 if (isCurrent && videoReady) {
-                    drawMediaIntoSlot(ctx, elements.video, targetSlot, { scale: 1, offsetX: 0, offsetY: 0 }, targetSlot.x, targetSlot.y);
+                    drawMediaIntoSlot(ctx, elements.video, targetSlot, {
+                        scale: 1,
+                        offsetX: 0,
+                        offsetY: 0
+                    }, targetSlot.x, targetSlot.y);
                     if (perCutOverlay) {
                         drawOverlayIntoSlot(ctx, perCutOverlay, targetSlot);
                     }
@@ -1040,9 +1044,13 @@
 
             piece.animate(
                 [
-                    { transform: "translate3d(0, 0, 0) rotate(0deg)", opacity: 1 },
-                    { transform: `translate3d(${driftX * 0.35}px, ${fallY * 0.45}px, 0) rotate(${spin * 0.45}deg)`, opacity: 1, offset: 0.45 },
-                    { transform: `translate3d(${driftX}px, ${fallY}px, 0) rotate(${spin}deg)`, opacity: 0 }
+                    {transform: "translate3d(0, 0, 0) rotate(0deg)", opacity: 1},
+                    {
+                        transform: `translate3d(${driftX * 0.35}px, ${fallY * 0.45}px, 0) rotate(${spin * 0.45}deg)`,
+                        opacity: 1,
+                        offset: 0.45
+                    },
+                    {transform: `translate3d(${driftX}px, ${fallY}px, 0) rotate(${spin}deg)`, opacity: 0}
                 ],
                 {
                     duration,

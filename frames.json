@@ -7,12 +7,11 @@
     "height": 3187,
     "previewImagePath": "images/frames/idea/preview.png",
     "frameBaseImagePath": "images/frames/idea/base.png",
-    "overlayImagePath": "images/frames/idea/overlay.png",
     "perCutOverlayImagePaths": [
-      "images/frames/idea/cut-overlay-1.png",
-      "images/frames/idea/cut-overlay-2.png",
-      "images/frames/idea/cut-overlay-3.png",
-      "images/frames/idea/cut-overlay-4.png"
+      "images/frames/common/type-a/cut-overlay-1.png",
+      "images/frames/common/type-a/cut-overlay-2.png",
+      "images/frames/common/type-a/cut-overlay-3.png",
+      "images/frames/common/type-a/cut-overlay-4.png"
     ],
     "backgroundColor": "#111111",
     "borderColor": "#2f2f2f",
@@ -33,10 +32,10 @@
     "previewImagePath": "images/frames/think-of-you/preview.png",
     "frameBaseImagePath": "images/frames/think-of-you/base.png",
     "perCutOverlayImagePaths": [
-      "images/frames/think-of-you/cut-overlay-1.png",
-      "images/frames/think-of-you/cut-overlay-2.png",
-      "images/frames/think-of-you/cut-overlay-3.png",
-      "images/frames/think-of-you/cut-overlay-4.png"
+      "images/frames/common/type-a/cut-overlay-1.png",
+      "images/frames/common/type-a/cut-overlay-2.png",
+      "images/frames/common/type-a/cut-overlay-3.png",
+      "images/frames/common/type-a/cut-overlay-4.png"
     ],
     "backgroundColor": "#ffffff",
     "borderColor": "#e5e7eb",
